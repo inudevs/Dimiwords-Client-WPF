@@ -1,1 +1,1 @@
-# Dimiwords-Client-WPF
+# C#으로 제작한걸 처음부터 WPF로 제작하는 것
