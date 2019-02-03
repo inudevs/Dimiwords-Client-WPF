@@ -14,7 +14,7 @@
                         <GradientStop Color="#FFED1687"/>
                     </LinearGradientBrush>
                 </DockPanel.Background>
-                <Image x:Name="Image1" Width="23" Height="23" HorizontalAlignment="Right" Margin="0,0,13,0" MouseLeftButtonDown="Image_MouseLeftButtonDown" MouseLeftButtonUp="Image_MouseLeftButtonUp" MouseEnter="Image1_MouseEnter" MouseLeave="Image1_MouseLeave" Source="Resources/Close.png"/>
+                <Image x:Name="Image1" Width="27" Height="27" HorizontalAlignment="Right" Margin="0,0,13,0" MouseLeftButtonDown="Image_MouseLeftButtonDown" MouseLeftButtonUp="Image_MouseLeftButtonUp" MouseEnter="Image1_MouseEnter" MouseLeave="Image1_MouseLeave" Source="Resources/Close.png"/>
             </DockPanel>
 
         </DockPanel>
