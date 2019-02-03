@@ -71,7 +71,7 @@ namespace Dimiwords_Client_WPF
         
         public static void Stop()
         {
-            DiscordRpc.Shutdown();
+            Shutdown();
         }
         
         private static void ReadyCallback()
@@ -137,5 +137,4 @@ namespace Dimiwords_Client_WPF
         [DllImport(Discord.DLL, EntryPoint = "Discord_Shutdown", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Shutdown();
     }
-}
 }

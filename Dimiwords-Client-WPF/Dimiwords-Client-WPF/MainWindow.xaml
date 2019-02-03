@@ -3,10 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Dimiwords_Client_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
-    <Grid>
-        
+        Title="MainWindow" Height="537.805" Width="957.317" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowStyle="None">
+    <Grid Background="White">
+        <DockPanel>
+            <DockPanel Height="44.684" VerticalAlignment="Top" MouseLeftButtonDown="DockPanel_MouseLeftButtonDown">
+                <DockPanel.Background>
+                    <LinearGradientBrush EndPoint="0.8,0.8" StartPoint="0,0">
+                        <GradientStop Color="#FFFD6868" Offset="1"/>
+                        <GradientStop Color="#FFED1687"/>
+                    </LinearGradientBrush>
+                </DockPanel.Background>
+                <Image x:Name="Image1" Width="23" Height="23" HorizontalAlignment="Right" Margin="0,0,13,0" MouseLeftButtonDown="Image_MouseLeftButtonDown" MouseLeftButtonUp="Image_MouseLeftButtonUp" MouseEnter="Image1_MouseEnter" MouseLeave="Image1_MouseLeave" Source="Resources/Close.png"/>
+            </DockPanel>
+
+        </DockPanel>
     </Grid>
 </Window>
