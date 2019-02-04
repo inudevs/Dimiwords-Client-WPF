@@ -129,11 +129,26 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Min.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Close.png" />
     <Resource Include="Resources\Close_Mouse_Down.png" />
     <Resource Include="Resources\Close_On_Mouse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Max.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Max_On_Mouse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Max_Mouse_Down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Min_Mouse_Down.png" />
+    <Resource Include="Resources\Min_On_Mouse.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

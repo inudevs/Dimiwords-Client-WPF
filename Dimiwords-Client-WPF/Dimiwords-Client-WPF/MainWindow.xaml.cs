@@ -1,23 +1,7 @@
-﻿using Microsoft.Speech.Synthesis;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Dimiwords_Client_WPF
 {
@@ -26,8 +10,8 @@ namespace Dimiwords_Client_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DateTime downTime;
-        private object downSender;
+        private DateTime downTime_Close, downTime_Min, downTime_Max;
+        private object downSender_Close, downSender_Min, downSender_Max;
         private bool isInsideimage = false;
 
         public MainWindow()
@@ -50,13 +34,22 @@ namespace Dimiwords_Client_WPF
 
         private void SetCloseImage(string bmp)
         {
-            //var Bi = new BitmapImage(new Uri($@"pack://application:,,,/{Assembly.GetExecutingAssembly().GetName().Name};component/{bmp}.png", UriKind.Absolute));
             Image1.Source = new BitmapImage(new Uri($"/Dimiwords-Client-WPF;component/Resources/{bmp}.png", UriKind.Relative));
         }
 
-        private void Them(bool isWhite)
+        private void SetMaxImage(string bmp)
         {
-            if (isWhite)
+            Image2.Source = new BitmapImage(new Uri($"/Dimiwords-Client-WPF;component/Resources/{bmp}.png", UriKind.Relative));
+        }
+
+        private void SetMinImage(string bmp)
+        {
+            Image3.Source = new BitmapImage(new Uri($"/Dimiwords-Client-WPF;component/Resources/{bmp}.png", UriKind.Relative));
+        }
+
+        private void Theme(bool isMagenta)
+        {
+            if (isMagenta)
             {
 
             }
@@ -69,24 +62,109 @@ namespace Dimiwords_Client_WPF
         private void DockPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!isInsideimage)
+            {
+                if (WindowState == WindowState.Maximized)
+                {
+                    WindowState = WindowState.Normal;
+                    Top = 0;
+                    Left = Mouse.GetPosition(this).X - (Width / 2);
+                    if (Left < 0)
+                        Left -= Left;
+                    else if (Left + Width > SystemParameters.WorkArea.Width)
+                        Left -= Left + Width - SystemParameters.WorkArea.Width;
+                }
                 DragMove();
+            }
         }
 
-        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Image3_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                downSender = sender;
-                downTime = DateTime.Now;
+                downSender_Min = sender;
+                downTime_Min = DateTime.Now;
+                SetMinImage("Min_Mouse_Down");
+            }
+        }
+
+        private void Image3_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released && sender == downSender_Min)
+            {
+                var timeSinceDown = DateTime.Now - downTime_Min;
+                if (timeSinceDown.TotalMilliseconds < 500)
+                {
+                    WindowState = WindowState.Minimized;
+                }
+                SetMinImage("Min_On_Mouse");
+            }
+        }
+
+        private void Image3_MouseEnter(object sender, MouseEventArgs e)
+        {
+            isInsideimage = true;
+            SetMinImage("Min_On_Mouse");
+        }
+
+        private void Image3_MouseLeave(object sender, MouseEventArgs e)
+        {
+            isInsideimage = false;
+            SetMinImage("Min");
+        }
+
+        private void Image2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                downSender_Max = sender;
+                downTime_Max = DateTime.Now;
+                SetMaxImage("Max_Mouse_Down");
+            }
+        }
+
+        private void Image2_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released && sender == downSender_Max)
+            {
+                var timeSinceDown = DateTime.Now - downTime_Max;
+                if (timeSinceDown.TotalMilliseconds < 500)
+                {
+                    if (WindowState == WindowState.Maximized)
+                        WindowState = WindowState.Normal;
+                    else
+                        WindowState = WindowState.Maximized;
+                }
+                SetMaxImage("Max_On_Mouse");
+            }
+        }
+
+        private void Image2_MouseEnter(object sender, MouseEventArgs e)
+        {
+            isInsideimage = true;
+            SetMaxImage("Max_On_Mouse");
+        }
+
+        private void Image2_MouseLeave(object sender, MouseEventArgs e)
+        {
+            isInsideimage = false;
+            SetMaxImage("Max");
+        }
+
+        private void Image1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                downSender_Close = sender;
+                downTime_Close = DateTime.Now;
                 SetCloseImage("Close_Mouse_Down");
             }
         }
 
-        private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void Image1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Released && sender ==  downSender)
+            if (e.LeftButton == MouseButtonState.Released && sender ==  downSender_Close)
             {
-                var timeSinceDown = DateTime.Now - downTime;
+                var timeSinceDown = DateTime.Now - downTime_Close;
                 if (timeSinceDown.TotalMilliseconds < 500)
                 {
                     Close();
