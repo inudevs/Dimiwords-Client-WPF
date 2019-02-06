@@ -30,6 +30,7 @@ namespace Dimiwords_Client_WPF
         private ChromeDriverService driverService = ChromeDriverService.CreateDefaultService();
         private ChromeDriver driver = null;
         private BackgroundWorker isDimiwords = new BackgroundWorker();
+        private string id, pw;
 
         public MainWindow()
         {
@@ -215,8 +216,8 @@ namespace Dimiwords_Client_WPF
             {
                 Url = "https://dimiwords.tk/#/user/login"
             };
-            var t1 = new Thread(() => driver.FindElementByXPath("//input[@placeholder='이메일']").SendKeys("shimjs8@naver.com"));
-            var t2 = new Thread(() => driver.FindElementByXPath("//input[@placeholder='비밀번호']").SendKeys("+=mkonji1243"));
+            var t1 = new Thread(() => driver.FindElementByXPath("//input[@placeholder='이메일']").SendKeys(id));
+            var t2 = new Thread(() => driver.FindElementByXPath("//input[@placeholder='비밀번호']").SendKeys(pw));
             t1.Start();
             t2.Start();
             t1.Join();

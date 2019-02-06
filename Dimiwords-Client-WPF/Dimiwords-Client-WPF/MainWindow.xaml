@@ -18,12 +18,12 @@
                 <Image x:Name="Image2" DockPanel.Dock="Right" Width="28.8" Height="28.8" HorizontalAlignment="Right" Margin="0,0,7,0" MouseLeftButtonDown="Image2_MouseLeftButtonDown" MouseLeftButtonUp="Image2_MouseLeftButtonUp" MouseEnter="Image2_MouseEnter" MouseLeave="Image2_MouseLeave" Source="Resources/Max.png"/>
                 <Image x:Name="Image3" DockPanel.Dock="Right" Width="28.8" Height="28.8" HorizontalAlignment="Right" Margin="0,0,7,0" MouseLeftButtonDown="Image3_MouseLeftButtonDown" MouseLeftButtonUp="Image3_MouseLeftButtonUp" MouseEnter="Image3_MouseEnter" MouseLeave="Image3_MouseLeave" Source="Resources/Min.png"/>
                 <Image Height="37" DockPanel.Dock="Left" VerticalAlignment="Top" Width="46" Margin="5,4,0,0" Source="Resources/Logo.png"/>
-                <Label Content="CIVAR" DockPanel.Dock="Left" Width="174" HorizontalAlignment="Left" FontFamily="Press Start 2P" FontSize="22" Margin="5,8,0,0" Foreground="White"/>
+                <Label Content="CIVAR" DockPanel.Dock="Left" Width="174" HorizontalAlignment="Left" FontFamily="Press Start 2P" FontSize="22" Margin="5,8,0,4" Foreground="White"/>
             </DockPanel>
 
         </DockPanel>
         <Label Content="DIMIWORDS
-               " HorizontalAlignment="Left" Margin="41,85,0,0" VerticalAlignment="Top" Height="28" Width="172" FontFamily="Press Start 2P" FontSize="18"/>
+               " HorizontalAlignment="Left" Margin="41,87,0,0" VerticalAlignment="Top" Height="26" Width="172" FontFamily="Press Start 2P" FontSize="18"/>
         <Button Content="열기" HorizontalAlignment="Left" Margin="86,118,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
     </Grid>
 </Window>
