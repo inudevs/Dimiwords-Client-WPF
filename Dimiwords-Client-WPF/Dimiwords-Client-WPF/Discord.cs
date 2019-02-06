@@ -11,8 +11,12 @@ namespace Dimiwords_Client_WPF
     {
         static RichPresence presence;
         static EventHandlers handlers;
-        
-        public const string DLL = "discord-rpc.dll";
+
+#if WIN64
+        public const string DLL = "discord-rpc-64.dll";
+#elif WIN32
+        public const string DLL = "discord-rpc-32.dll";
+#endif
 
         public static bool LibCheck()
         {
