@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static Dimiwords_Client_WPF.Properties.Settings;
 
 namespace Dimiwords_Client_WPF
 {
@@ -26,18 +27,30 @@ namespace Dimiwords_Client_WPF
 
         private DateTime downTime_Close, downTime_Min, downTime_Max;
         private object downSender_Close, downSender_Min, downSender_Max;
-        private bool isInsideimage = false;
+        private bool isInsideimage = false, isStateChange = false;
         private ChromeDriverService driverService = ChromeDriverService.CreateDefaultService();
-        private ChromeDriver driver = null;
+        private ChromeDriver dimiwords = null, benedu = null, civar09 = null;
+        private ChromeOptions chromeOptions = new ChromeOptions();
         private BackgroundWorker isDimiwords = new BackgroundWorker();
-        private string id, pw;
+        private string id = "바보 주노", pw = "멍청 주노";
 
         public MainWindow()
         {
             InitializeComponent();
+            Left = Default.form_Size.Left;
+            Top = Default.form_Size.Top;
+            Width = Default.form_Size.Width;
+            Height = Default.form_Size.Height;
+            if (Default.form_is_Max)
+            {
+                WindowState = WindowState.Maximized;
+                SetMaxImage("");
+            }
+            Theme(Default.theme_Set);
             driverService.HideCommandPromptWindow = true;
             isDimiwords.DoWork += IsDimiwords_DoWork;
             isDimiwords.RunWorkerAsync();
+            chromeOptions.AddArguments($"--window-position={Left},{Top}", $"--window-size={Width},{Height}");
         }
 
         private string GetActiveWindowTitle()
@@ -56,9 +69,29 @@ namespace Dimiwords_Client_WPF
         {
             while (true)
             {
-                if (GetActiveWindowTitle() == "DIMIWORDS - Chrome")
+                try
                 {
-                    Dispatcher.Invoke(() => Theme(driver.PageSource.Contains("background-image: linear-gradient(to right, rgb(236, 0, 140), rgb(252, 103, 103));")));
+                    var activeWindow = GetActiveWindowTitle();
+                    if (activeWindow == "DIMIWORDS - Chrome")
+                    {
+                        Dispatcher.Invoke(() => Theme(dimiwords.PageSource.Contains("background-image: linear-gradient(to right, rgb(236, 0, 140), rgb(252, 103, 103));") ? Themes.Magenta : Themes.Blue));
+                    }
+                    else if (activeWindow == "좋은공부 많이하자!::베네듀(BenEdu) - Chrome")
+                    {
+                        Dispatcher.Invoke(() => Theme(Themes.Yellow_BND));
+                    }
+                    else if (activeWindow == "CIVAR09 - Chrome")
+                    {
+                        Dispatcher.Invoke(() => Theme(Themes.Yellow_09));
+                    }
+                }
+                catch (NullReferenceException)
+                {
+
+                }
+                catch (InvalidOperationException)
+                {
+
                 }
                 Thread.Sleep(10);
             }
@@ -70,10 +103,10 @@ namespace Dimiwords_Client_WPF
             Discord.UpdatePresence();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             Discord.Stop();
-            driver.Quit();
+            dimiwords.Quit();
             Closedriver();
         }
 
@@ -84,7 +117,8 @@ namespace Dimiwords_Client_WPF
 
         private void SetMaxImage(string bmp)
         {
-            Image2.Source = new BitmapImage(new Uri($"/Dimiwords-Client-WPF;component/Resources/{bmp}.png", UriKind.Relative));
+            var MON = (WindowState == WindowState.Maximized ? "Normal" : "Max") + bmp;
+            Image2.Source = new BitmapImage(new Uri($"/Dimiwords-Client-WPF;component/Resources/{MON}.png", UriKind.Relative));
         }
 
         private void SetMinImage(string bmp)
@@ -92,9 +126,9 @@ namespace Dimiwords_Client_WPF
             Image3.Source = new BitmapImage(new Uri($"/Dimiwords-Client-WPF;component/Resources/{bmp}.png", UriKind.Relative));
         }
 
-        private void Theme(bool isMagenta)
+        private void Theme(int ThemeSet)
         {
-            if (isMagenta)
+            if (ThemeSet == Themes.Magenta)
             {
                 var linear = new LinearGradientBrush
                 {
@@ -104,8 +138,9 @@ namespace Dimiwords_Client_WPF
                 linear.GradientStops.Add(new GradientStop(Color.FromRgb(236, 0, 140), 0));
                 linear.GradientStops.Add(new GradientStop(Color.FromRgb(252, 103, 103), 1));
                 dockPanel1.Background = linear;
+                Default.dimiwords_Theme = false;
             }
-            else
+            else if (ThemeSet == Themes.Blue)
             {
                 var linear = new LinearGradientBrush
                 {
@@ -115,7 +150,21 @@ namespace Dimiwords_Client_WPF
                 linear.GradientStops.Add(new GradientStop(Color.FromRgb(85, 47, 201), 0));
                 linear.GradientStops.Add(new GradientStop(Color.FromRgb(66, 150, 219), 1));
                 dockPanel1.Background = linear;
+                Default.dimiwords_Theme = true;
             }
+            else if (ThemeSet == Themes.Yellow_BND)
+            {
+                var linear = new SolidColorBrush(Color.FromRgb(252, 208, 54));
+                dockPanel1.Background = linear;
+            }
+            else if (ThemeSet == Themes.Yellow_09)
+            {
+                var linear = new SolidColorBrush(Color.FromRgb(255, 201, 56));
+                dockPanel1.Background = linear;
+            }
+            Default.Save();
+            Default.theme_Set = ThemeSet;
+            Default.Save();
         }
 
         private void DockPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -177,7 +226,7 @@ namespace Dimiwords_Client_WPF
             {
                 downSender_Max = sender;
                 downTime_Max = DateTime.Now;
-                SetMaxImage("Max_Mouse_Down");
+                SetMaxImage("_Mouse_Down");
             }
         }
 
@@ -188,41 +237,159 @@ namespace Dimiwords_Client_WPF
                 var timeSinceDown = DateTime.Now - downTime_Max;
                 if (timeSinceDown.TotalMilliseconds < 500)
                 {
-                    if (WindowState == WindowState.Maximized)
-                        WindowState = WindowState.Normal;
-                    else
-                        WindowState = WindowState.Maximized;
+                    WindowState = WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
                 }
-                SetMaxImage("Max_On_Mouse");
+                SetMaxImage("_On_Mouse");
             }
         }
 
         private void Image2_MouseEnter(object sender, MouseEventArgs e)
         {
             isInsideimage = true;
-            SetMaxImage("Max_On_Mouse");
+            SetMaxImage("_On_Mouse");
         }
 
         private void Image2_MouseLeave(object sender, MouseEventArgs e)
         {
             isInsideimage = false;
-            SetMaxImage("Max");
+            SetMaxImage("");
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void civar09_Open(object sender, RoutedEventArgs e)
         {
-            Closedriver();
-            driver = new ChromeDriver(driverService, new ChromeOptions())
+            try
             {
-                Url = "https://dimiwords.tk/#/user/login"
-            };
-            var t1 = new Thread(() => driver.FindElementByXPath("//input[@placeholder='이메일']").SendKeys(id));
-            var t2 = new Thread(() => driver.FindElementByXPath("//input[@placeholder='비밀번호']").SendKeys(pw));
-            t1.Start();
-            t2.Start();
-            t1.Join();
-            t2.Join();
-            driver.FindElementByXPath("//button[.='로그인']").Click();
+                civar09?.Quit();
+                civar09 = new ChromeDriver(driverService, chromeOptions)
+                {
+                    Url = "http://dimiwords.tk:39991/#/"
+                };
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+            catch (NoSuchWindowException)
+            {
+
+            }
+            catch (WebDriverException)
+            {
+
+            }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (!isStateChange)
+            {
+                Default.form_Size = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
+                Default.Save();
+            }
+            isStateChange = false;
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            isStateChange = true;
+            Default.form_is_Max = WindowState == WindowState.Maximized;
+            Default.Save();
+        }
+
+        private void dimiwords_Open(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                dimiwords?.Quit();
+                dimiwords = new ChromeDriver(driverService, chromeOptions)
+                {
+                    Url = "https://dimiwords.tk/#/user/login"
+                };
+                dimiwords.FindElementByXPath("//input[@placeholder='이메일']").SendKeys(id);
+                dimiwords.FindElementByXPath("//input[@placeholder='비밀번호']").SendKeys(pw);
+                Thread.Sleep(200);
+                dimiwords.FindElementByXPath("//button[.='로그인']").Click();
+                if (Default.dimiwords_Theme)
+                {
+                    var retry = 0;
+                    Retry:;
+                    if (retry > 300)
+                        goto RetryEnd;
+                    try
+                    {
+                        Thread.Sleep(10);
+                        dimiwords.FindElementByXPath("//div[@class='v-switch-button']").Click();
+                        goto RetryEnd;
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        retry++;
+                        goto Retry;
+                    }
+                    catch (StaleElementReferenceException)
+                    {
+                        retry++;
+                        goto Retry;
+                    }
+                    RetryEnd:;
+                }
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+            catch (NoSuchWindowException)
+            {
+
+            }
+            catch (WebDriverException)
+            {
+
+            }
+        }
+
+        private void benedu_Open(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                benedu?.Quit();
+                benedu = new ChromeDriver(driverService, chromeOptions)
+                {
+                    Url = "https://www.benedu.co.kr/Index.aspx"
+                };
+                benedu.FindElementById("liLogin").Click();
+                var retry = 0;
+                Retry:;
+                if (retry > 300)
+                    goto RetryEnd;
+                try
+                {
+                    Thread.Sleep(100);
+                    benedu.FindElementById("inputEmail").SendKeys(id);
+                    Thread.Sleep(100);
+                    benedu.FindElementById("inputPassword").SendKeys(pw);
+                    Thread.Sleep(200);
+                    benedu.FindElementById("btnLogin").Click();
+                }
+                catch (ElementNotVisibleException)
+                {
+                    retry++;
+                    goto Retry;
+                }
+                RetryEnd:;
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+            catch (NoSuchWindowException)
+            {
+
+            }
+            catch (WebDriverException)
+            {
+
+            }
         }
 
         private void Closedriver()

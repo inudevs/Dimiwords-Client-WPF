@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="537.805" Width="957.317" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowStyle="None">
+        Title="MainWindow" Height="537.805" Width="957.317" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowStyle="None" SizeChanged="Window_SizeChanged" StateChanged="Window_StateChanged">
     <Grid Background="White">
         <DockPanel>
             <DockPanel x:Name="dockPanel1" Height="44.684" VerticalAlignment="Top" MouseLeftButtonDown="DockPanel_MouseLeftButtonDown">
@@ -22,8 +22,11 @@
             </DockPanel>
 
         </DockPanel>
-        <Label Content="DIMIWORDS
-               " HorizontalAlignment="Left" Margin="41,87,0,0" VerticalAlignment="Top" Height="26" Width="172" FontFamily="Press Start 2P" FontSize="18"/>
-        <Button Content="열기" HorizontalAlignment="Left" Margin="86,118,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Label Content="DIMIWORDS" HorizontalAlignment="Left" Margin="41,87,0,0" VerticalAlignment="Top" Height="26" Width="172" FontFamily="Press Start 2P" FontSize="18"/>
+        <Button Content="열기" HorizontalAlignment="Left" Margin="86,118,0,0" VerticalAlignment="Top" Width="75" Click="dimiwords_Open"/>
+        <Button Content="열기" HorizontalAlignment="Left" Margin="297,118,0,0" VerticalAlignment="Top" Width="75" Click="benedu_Open"/>
+        <Image HorizontalAlignment="Left" Height="49" Margin="249,64,0,0" VerticalAlignment="Top" Width="164" Source="Resources/Benedu_logo.png"/>
+        <Label Content="CIVAR09" HorizontalAlignment="Left" Margin="486,87,0,0" VerticalAlignment="Top" Height="26" Width="135" FontFamily="Press Start 2P" FontSize="18"/>
+        <Button Content="열기" HorizontalAlignment="Left" Margin="512,118,0,0" VerticalAlignment="Top" Width="75" Click="civar09_Open"/>
     </Grid>
 </Window>
