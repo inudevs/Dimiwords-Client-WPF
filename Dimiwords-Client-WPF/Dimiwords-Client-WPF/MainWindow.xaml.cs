@@ -264,6 +264,7 @@ namespace Dimiwords_Client_WPF
                 {
                     Url = "http://dimiwords.tk:39991/#/"
                 };
+                Discord.StateUpdate("civar09", "물건 살펴보는 중...");
             }
             catch (InvalidOperationException)
             {
@@ -333,6 +334,7 @@ namespace Dimiwords_Client_WPF
                     }
                     RetryEnd:;
                 }
+                Discord.StateUpdate("dimiwords", "단어 공부하는 중...");
             }
             catch (InvalidOperationException)
             {
@@ -376,7 +378,8 @@ namespace Dimiwords_Client_WPF
                     retry++;
                     goto Retry;
                 }
-                RetryEnd:;
+            RetryEnd:;
+                Discord.StateUpdate("benedu", "공부 데이터 수집 중...");
             }
             catch (InvalidOperationException)
             {
